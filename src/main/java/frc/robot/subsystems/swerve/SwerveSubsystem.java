@@ -125,14 +125,26 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    // Implement timing for each subsystem process
+    long startTimeNano = System.nanoTime();
+
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
+
+    long gyroTimeNano = System.nanoTime();
+    Logger.recordOutput("Drive/Time/GyroUpdate", (gyroTimeNano - startTimeNano) / 1e6);
+
     for (var module : modules) {
       module.periodic();
     }
     odometryLock.unlock();
 
+    long moduleTimeNano = System.nanoTime();
+    Logger.recordOutput("Drive/Time/ModuleUpdate", (moduleTimeNano - gyroTimeNano) / 1e6);
+
+    long disabledStartNano = moduleTimeNano;
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
       for (var module : modules) {
@@ -140,11 +152,16 @@ public class SwerveSubsystem extends SubsystemBase {
       }
     }
 
+    long disabledTimeNano = System.nanoTime();
+    Logger.recordOutput("Drive/Time/DisabledStop", (disabledTimeNano - disabledStartNano) / 1e6);
+
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
       Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
+
+    long odometryStartNano = disabledTimeNano;
 
     // Update odometry
     double[] sampleTimestamps =
@@ -177,6 +194,9 @@ public class SwerveSubsystem extends SubsystemBase {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
+
+    long odometryTimeNano = System.nanoTime();
+    Logger.recordOutput("Drive/Time/OdometryUpdate", (odometryTimeNano - odometryStartNano) / 1e6);
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
