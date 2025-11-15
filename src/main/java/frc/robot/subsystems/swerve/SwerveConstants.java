@@ -38,10 +38,10 @@ public class SwerveConstants {
       };
 
   // Zeroed rotation values for each module, Setup Step 1: Rotation2d(0.0); |
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.0);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-(Math.PI / 2));
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d();
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d((Math.PI));
+  public static final Rotation2d backRightZeroRotation = new Rotation2d((Math.PI / 2));
 
   // CAN IDs
   public static final int pigeonCanId = 25;
@@ -57,10 +57,10 @@ public class SwerveConstants {
   public static final int backRightTurnCanId = 6;
 
   // Drive motor configuration (MAXSwerve with 14 pinion teeth and 22 spur teeth)
-  public static final int driveMotorCurrentLimit = 40;
+  public static final int driveMotorCurrentLimit = 50;
 
   // Remeasure the radius in the Makerspace, Run the Wheel Characterization Auto
-  public static final double wheelRadiusMeters = Units.inchesToMeters(1.42668820866);
+  public static final double wheelRadiusMeters = Units.inchesToMeters(1.498);
   public static final double drivePinionTeeth = 14;
   public static final double driveSpurTeeth = 22;
   public static final double driveMotorReduction =
@@ -74,10 +74,10 @@ public class SwerveConstants {
       (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
 
   // Drive PID configuration
-  public static final double driveKp = 0.04;
+  public static final double driveKp = 0.0;
   public static final double driveKd = 0.0;
-  public static final double driveKs = 0.0;
-  public static final double driveKv = 0.1;
+  public static final double driveKs = 0.12472;
+  public static final double driveKv = 0.08277;
   public static final double driveSimP = 0.05;
   public static final double driveSimD = 0.0;
   public static final double driveSimKs = 0.0;
