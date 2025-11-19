@@ -20,9 +20,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.roller.rollerSystem;
+import frc.robot.subsystems.roller.rollerSystemIOSim;
+import frc.robot.subsystems.roller.rollerSystemIOSpark;
 import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
@@ -40,6 +44,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem swerveSubsystem;
+  private final rollerSystem rollerSubsystem;
   // private final Vision vision;
 
   // Controller
@@ -60,6 +65,7 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+        rollerSubsystem = new rollerSystem(new rollerSystemIOSpark(10));
 
         // vision =
         //     new Vision(
@@ -79,6 +85,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
+        rollerSubsystem = new rollerSystem(new rollerSystemIOSim());
 
         // vision =
         //     new Vision(
@@ -102,7 +109,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-
+        rollerSubsystem = new rollerSystem(null);
         // vision =
         //     new Vision(swerveSubsystem::addVisionMeasurement, new VisionIO() {}, new VisionIO()
         // {});
@@ -164,7 +171,8 @@ public class RobotContainer {
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(swerveSubsystem::stopWithX, swerveSubsystem));
+    controller.x().onTrue(new InstantCommand(() -> rollerSubsystem.outtake(), rollerSubsystem));
+    controller.y().onTrue(new InstantCommand(() -> rollerSubsystem.setSpeed(.5), rollerSubsystem));
 
     // Reset gyro to 0° when B button is pressed
     controller
