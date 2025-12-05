@@ -16,15 +16,18 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
+//Interfaces are "class blueprints" and consist of abstract methods that can then be assigned to multiple different classes that implemnet the interface
+//In this case GyroIOPigeon2 inplements this interface
 public interface GyroIO {
   @AutoLog
   public static class GyroIOInputs {
+    //Gyro inputs consist of a yaw position, a yaw (rotational) velocity, and two arrays to store timestamps and positions of the robot's yaw (for post-match logging)
     public boolean connected = false;
     public Rotation2d yawPosition = new Rotation2d();
     public double yawVelocityRadPerSec = 0.0;
     public double[] odometryYawTimestamps = new double[] {};
     public Rotation2d[] odometryYawPositions = new Rotation2d[] {};
   }
-
+  //Empty interface method, used in a different file to update the Gyro Inputs with current robot data so we know where we are on the fieled
   public default void updateInputs(GyroIOInputs inputs) {}
 }
