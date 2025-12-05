@@ -44,52 +44,51 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem;
-  private final Vision vision;
-
-  //labubu
+  private final SwerveSubsystem swerveSubsystem; // creates a new swerve subsystem variable to be initialized
+  private final Vision vision; // creates a new vision variable to be initialized
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController controller = new CommandXboxController(0); // creates a new xbox controller object; this variable will refer to the controller connected to port 0?
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser; // I'm not sure what this chooser thing is, but I think this would be related to the smart dashboard judging by its class name
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    switch (Constants.currentMode) {
-      case REAL:
+  public RobotContainer() { // constructor
+    switch (Constants.currentMode) { // switch statement to determine how to initialize swerve and vision
+      case REAL: // if the program is running on an actual physical robot
         // Real robot, instantiate hardware IO implementations
         swerveSubsystem =
-            new SwerveSubsystem(
-                new GyroIOPigeon2(),
-                new ModuleIOSpark(0),
-                new ModuleIOSpark(1),
-                new ModuleIOSpark(2),
-                new ModuleIOSpark(3));
+            new SwerveSubsystem( // initialize variable to a new swerve subsystem object with new motor objects
+                new GyroIOPigeon2(), // idk
+                new ModuleIOSpark(0), // front left motor
+                new ModuleIOSpark(1), // front right motor
+                new ModuleIOSpark(2), // back left motor
+                new ModuleIOSpark(3)); // back right motor
 
         vision =
-            new Vision(
-                swerveSubsystem::addVisionMeasurement,
-                new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
+            new Vision( // initialize variable to a new vision object with new limelight objects
+                swerveSubsystem::addVisionMeasurement, // adds a timestamped vision measurement, i'm not sure what that means
+                new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation), // create new limelight camera objects with specified IDs and configs
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
 
         break;
 
-      case SIM:
+        // I'm unsure how simulation works.
+      case SIM: // if the program is running on a simulator
         // Sim robot, instantiate physics sim IO implementations
-        swerveSubsystem =
+        swerveSubsystem = // initialization
             new SwerveSubsystem(
-                new GyroIO() {},
-                new ModuleIOSim(),
+                new GyroIO() {}, // not sure
+                new ModuleIOSim(), // simulated motor modules
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
 
-        vision =
+        vision = // initialization
             new Vision(
                 swerveSubsystem::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(
+                new VisionIOPhotonVisionSim( // simulator specific configurations?
                     VisionConstants.FrontLeftLL,
                     VisionConstants.robotToFrontLeftLL,
                     swerveSubsystem::getPose),
@@ -99,7 +98,7 @@ public class RobotContainer {
                     swerveSubsystem::getPose));
         break;
 
-      default:
+      default: // if the program is running on a replay log file (not 100% sure what that means)
         // Replayed robot, disable IO implementations
         swerveSubsystem =
             new SwerveSubsystem(
@@ -116,10 +115,10 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser()); // does this determine the movement for the autonomous period?
 
     // Set up SysId routines
-    autoChooser.addOption(
+    autoChooser.addOption( // auto options? I'm confused on what these options do.
         "Drive Wheel Radius Characterization",
         DriveCommands.wheelRadiusCharacterization(swerveSubsystem));
     autoChooser.addOption(
@@ -149,39 +148,39 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings() { // bind button controls to the xbox controller
     // Default command, normal field-relative drive
     swerveSubsystem.setDefaultCommand(
-        DriveCommands.joystickDrive(
+        DriveCommands.joystickDrive( // bind the joystick controls to the swerve subsystem
             swerveSubsystem,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getLeftY(), // left joystick, vertical tilt
+            () -> -controller.getLeftX(), // left joystick, horizontal tilt
+            () -> -controller.getRightX())); // right joystick, horizontal tilt
 
     // Lock to 0° when A button is held
-    controller
+    controller // bind A button control to swerve
         .a()
-        .whileTrue(
+        .whileTrue( // while the button is pressed down
             DriveCommands.joystickDriveAtAngle(
                 swerveSubsystem,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
+                () -> -controller.getLeftY(), // left joystick vertical
+                () -> -controller.getLeftX(), // left joystick horizontal
+                () -> new Rotation2d())); // constructor for measure of rotation?
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(swerveSubsystem::stopWithX, swerveSubsystem));
+    controller.x().onTrue(Commands.runOnce(swerveSubsystem::stopWithX, swerveSubsystem)); // bind X button control to swerve, not sure what X pattern is
 
     // Reset gyro to 0° when B button is pressed
-    controller
+    controller // bind B button control to swerve
         .b()
-        .onTrue(
+        .onTrue( // while B button is pressed
             Commands.runOnce(
                     () ->
-                        swerveSubsystem.setPose(
+                        swerveSubsystem.setPose( // is pose the measure of translation & rotation?
                             new Pose2d(
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
-                .ignoringDisable(true));
+                .ignoringDisable(true)); // makes it so this command runs when disabled?
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
@@ -205,7 +204,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
+  public Command getAutonomousCommand() { // get what command to run during auto
+    return autoChooser.get(); // chooses the command to use during auto?
   }
 }
