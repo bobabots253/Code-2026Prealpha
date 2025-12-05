@@ -44,24 +44,23 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem;
+  private final SwerveSubsystem swerveSubsystem; //creates Vision and Swerve Subsystems in Robotcontainer.
   private final Vision vision;
 
-  // labubu
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController controller = new CommandXboxController(0); //creates controller
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser; //creates a autochoser to be published to SmartDashboard/Elastic
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
+    switch (Constants.currentMode) { //switch statement depending on whether robot is simulated or real
       case REAL:
         // Real robot, instantiate hardware IO implementations
         swerveSubsystem =
-            new SwerveSubsystem(
+            new SwerveSubsystem( //creates a new swerve subsystem with non-simulated IOs
                 new GyroIOPigeon2(),
                 new ModuleIOSpark(0),
                 new ModuleIOSpark(1),
@@ -69,7 +68,7 @@ public class RobotContainer {
                 new ModuleIOSpark(3));
 
         vision =
-            new Vision(
+            new Vision( // creates new real vision subsystem
                 swerveSubsystem::addVisionMeasurement,
                 new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
