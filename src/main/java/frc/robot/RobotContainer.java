@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
@@ -40,6 +42,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem swerveSubsystem;
+  private EndEffectorSubsystem endEffectorSubsystem;
   // private final Vision vision;
 
   // Controller
@@ -60,6 +63,12 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+
+                endEffectorSubsystem =
+                new EndEffectorSubsystem(
+                new EndEffectorIOSpark(),
+                4
+                );
 
         // vision =
         //     new Vision(
@@ -106,6 +115,12 @@ public class RobotContainer {
         // vision =
         //     new Vision(swerveSubsystem::addVisionMeasurement, new VisionIO() {}, new VisionIO()
         // {});
+
+        endEffectorSubsystem =
+        new EndEffectorSubsystem(
+        new EndEffectorIOSpark(),
+        4
+        );
 
         break;
     }
@@ -177,7 +192,8 @@ public class RobotContainer {
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
                 .ignoringDisable(true));
-
+    
+    controller.leftBumper().whileTrue((endEffectorSubsystem.setOpenLoop(6)));
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
     // controller
