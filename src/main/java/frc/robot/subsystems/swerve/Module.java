@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
-  private final ModuleIO io;
+  private final ModuleIO io; //declares an instance of the module io
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
 

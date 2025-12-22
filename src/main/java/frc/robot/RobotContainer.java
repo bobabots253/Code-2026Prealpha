@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
+import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
@@ -46,7 +48,7 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem swerveSubsystem; //creates Vision and Swerve Subsystems in Robotcontainer.
   private final Vision vision;
-
+  private EndEffectorSubsystem endEffectorSubsystem;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0); //creates controller
@@ -73,8 +75,12 @@ public class RobotContainer {
                 new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
 
-        break;
+        endEffectorSubsystem =
+            new EndEffectorSubsystem(
+                new EndEffectorIOSpark()
+                ,4);
 
+        break;
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         swerveSubsystem =
@@ -181,7 +187,17 @@ public class RobotContainer {
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
                 .ignoringDisable(true));
+    controller
+        .leftBumper()
+        .whileTrue(
+            endEffectorSubsystem.intake(0.5)
+        );
 
+    controller
+        .rightBumper()
+        .whileTrue(
+                endEffectorSubsystem.intake(-0.5)
+            );
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
     // controller
