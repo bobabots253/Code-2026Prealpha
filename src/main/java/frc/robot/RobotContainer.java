@@ -64,11 +64,7 @@ public class RobotContainer {
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
 
-                endEffectorSubsystem =
-                new EndEffectorSubsystem(
-                new EndEffectorIOSpark(),
-                4
-                );
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSpark(), 4);
 
         // vision =
         //     new Vision(
@@ -116,11 +112,7 @@ public class RobotContainer {
         //     new Vision(swerveSubsystem::addVisionMeasurement, new VisionIO() {}, new VisionIO()
         // {});
 
-        endEffectorSubsystem =
-        new EndEffectorSubsystem(
-        new EndEffectorIOSpark(),
-        4
-        );
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSpark(), 4);
 
         break;
     }
@@ -192,7 +184,7 @@ public class RobotContainer {
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
                 .ignoringDisable(true));
-    
+
     controller.leftBumper().whileTrue((endEffectorSubsystem.setOpenLoop(6)));
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
