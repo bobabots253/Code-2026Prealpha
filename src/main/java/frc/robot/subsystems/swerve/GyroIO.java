@@ -18,13 +18,15 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface GyroIO {
   @AutoLog
-  public static class GyroIOInputs { //creates class for updating Gyro in simulations and replays
-    public boolean connected = false; //declares placeholder parameters to be implemented in the GyroPigeon2 file 
+  public static class GyroIOInputs { // creates class for updating Gyro in simulations and replays
+    public boolean connected =
+        false; // declares placeholder parameters to be implemented in the GyroPigeon2 file
     public Rotation2d yawPosition = new Rotation2d(); // create a rotation in degress
-    public double yawVelocityRadPerSec = 0.0; //turn rate in rad per second
-    public double[] odometryYawTimestamps = new double[] {}; //array of timestamps for rotations
-    public Rotation2d[] odometryYawPositions = new Rotation2d[] {}; //array of Rotations for Gyro
+    public double yawVelocityRadPerSec = 0.0; // turn rate in rad per second
+    public double[] odometryYawTimestamps = new double[] {}; // array of timestamps for rotations
+    public Rotation2d[] odometryYawPositions = new Rotation2d[] {}; // array of Rotations for Gyro
   }
 
-  public default void updateInputs(GyroIOInputs inputs) {} //method template that is overwritten in Pigeon2 file
+  public default void updateInputs(
+      GyroIOInputs inputs) {} // method template that is overwritten in Pigeon2 file
 }

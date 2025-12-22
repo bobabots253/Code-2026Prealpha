@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
+import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.ModuleIO;
@@ -46,23 +46,27 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem; //creates Vision and Swerve Subsystems in Robotcontainer.
+  private final SwerveSubsystem
+      swerveSubsystem; // creates Vision and Swerve Subsystems in Robotcontainer.
   private final Vision vision;
   private EndEffectorSubsystem endEffectorSubsystem;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0); //creates controller
+  private final CommandXboxController controller =
+      new CommandXboxController(0); // creates controller
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser; //creates a autochoser to be published to SmartDashboard/Elastic
+  private final LoggedDashboardChooser<Command>
+      autoChooser; // creates a autochoser to be published to SmartDashboard/Elastic
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) { //switch statement depending on whether robot is simulated or real
+    switch (Constants
+        .currentMode) { // switch statement depending on whether robot is simulated or real
       case REAL:
         // Real robot, instantiate hardware IO implementations
         swerveSubsystem =
-            new SwerveSubsystem( //creates a new swerve subsystem with non-simulated IOs
+            new SwerveSubsystem( // creates a new swerve subsystem with non-simulated IOs
                 new GyroIOPigeon2(),
                 new ModuleIOSpark(0),
                 new ModuleIOSpark(1),
@@ -75,10 +79,7 @@ public class RobotContainer {
                 new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
 
-        endEffectorSubsystem =
-            new EndEffectorSubsystem(
-                new EndEffectorIOSpark()
-                ,4);
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSpark(), 4);
 
         break;
       case SIM:
@@ -187,17 +188,9 @@ public class RobotContainer {
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
                 .ignoringDisable(true));
-    controller
-        .leftBumper()
-        .whileTrue(
-            endEffectorSubsystem.intake(0.5)
-        );
+    controller.leftBumper().whileTrue(endEffectorSubsystem.intake(0.5));
 
-    controller
-        .rightBumper()
-        .whileTrue(
-                endEffectorSubsystem.intake(-0.5)
-            );
+    controller.rightBumper().whileTrue(endEffectorSubsystem.intake(-0.5));
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
     // controller
