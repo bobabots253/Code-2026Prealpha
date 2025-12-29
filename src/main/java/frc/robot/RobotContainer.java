@@ -44,33 +44,62 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem; // creates a new swerve subsystem variable to be initialized
-  private final Vision vision; // creates a new vision variable to be initialized
+  /*
+   * Where is the file path for the 'swerveSubsystem'? Where is the file path for the 'vision'?
+   */
+  private final SwerveSubsystem
+      swerveSubsystem; // creates a new swerve subsystem variable to be initialized
+  private final Vision
+      vision; // creates a new vision variable to be initialized /* What type of variable? */
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0); // creates a new xbox controller object; this variable will refer to the controller connected to port 0?
+  private final CommandXboxController controller =
+      new CommandXboxController(
+          0); // creates a new xbox controller object; this variable will refer to the controller
+  // connected to port 0?
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser; // I'm not sure what this chooser thing is, but I think this would be related to the smart dashboard judging by its class name
+  private final LoggedDashboardChooser<Command> autoChooser;
+  // I'm not sure what this chooser thing is, but I think this would be related to the smart
+  // dashboard judging by its class name
+  /* Nice, this LoggedDashboardChooser extends of the WPILib 'SendableChooser' class which we use to select out autos */
+  /* The only difference between this one and the default WPILib is one is that it makes it loggable */
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() { // constructor
-    switch (Constants.currentMode) { // switch statement to determine how to initialize swerve and vision
+    switch (Constants
+        .currentMode) { // switch statement to determine how to initialize swerve and vision
       case REAL: // if the program is running on an actual physical robot
         // Real robot, instantiate hardware IO implementations
         swerveSubsystem =
-            new SwerveSubsystem( // initialize variable to a new swerve subsystem object with new motor objects
-                new GyroIOPigeon2(), // idk
-                new ModuleIOSpark(0), // front left motor
-                new ModuleIOSpark(1), // front right motor
-                new ModuleIOSpark(2), // back left motor
-                new ModuleIOSpark(3)); // back right motor
+            new SwerveSubsystem( // initialize variable to a new swerve subsystem object with new
+                // motor objects
+                new GyroIOPigeon2(), // idk /* The GyroIO is our gyroscope we use to calculate wheel
+                // odometry, the name of the specific product is called a
+                // Pigeon 2.0 */
+                new ModuleIOSpark(
+                    0), // front left motor /* Position Correct, What type of motor? */
+                new ModuleIOSpark(
+                    1), // front right motor /* Position Correct, What type of motor? */
+                new ModuleIOSpark(2), // back left motor /* Position Correct, What type of motor? */
+                new ModuleIOSpark(
+                    3)); // back right motor /* Position Correct, What type of motor? */
 
         vision =
             new Vision( // initialize variable to a new vision object with new limelight objects
-                swerveSubsystem::addVisionMeasurement, // adds a timestamped vision measurement, i'm not sure what that means
-                new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation), // create new limelight camera objects with specified IDs and configs
-                new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
+                swerveSubsystem
+                    ::addVisionMeasurement, // adds a timestamped vision measurement, i'm not sure
+                // what that means
+                /* A timestamp is a digital marker that allows us to sort the collected data */
+                /* If both camera return a vision input (along with a timestamp), we know the camera frames are synced up */
+                new VisionIOLimelight(
+                    VisionConstants.FrontLeftLL,
+                    swerveSubsystem
+                        ::getRotation), // create new limelight camera objects with specified IDs
+                // and configs
+                new VisionIOLimelight(
+                    VisionConstants.FrontRightLL,
+                    swerveSubsystem::getRotation)); /* What does the getRotation do? */
 
         break;
 
@@ -79,8 +108,8 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         swerveSubsystem = // initialization
             new SwerveSubsystem(
-                new GyroIO() {}, // not sure
-                new ModuleIOSim(), // simulated motor modules
+                new GyroIO() {}, /* In simulation, no real hardware can be instantiated so we use the inbuilt WPILib Gyro class */
+                new ModuleIOSim(), // simulated motor modules /* Good */
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
@@ -89,6 +118,7 @@ public class RobotContainer {
             new Vision(
                 swerveSubsystem::addVisionMeasurement,
                 new VisionIOPhotonVisionSim( // simulator specific configurations?
+                    /* Yes! It specificies the translation of the simulated cameras relative to the center of the robot. */
                     VisionConstants.FrontLeftLL,
                     VisionConstants.robotToFrontLeftLL,
                     swerveSubsystem::getPose),
@@ -99,6 +129,7 @@ public class RobotContainer {
         break;
 
       default: // if the program is running on a replay log file (not 100% sure what that means)
+        /* In replay mode, the robot uses the recorded values, there is no need to recalculate each of the value, we are just "watching" */
         // Replayed robot, disable IO implementations
         swerveSubsystem =
             new SwerveSubsystem(
@@ -115,7 +146,12 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser()); // does this determine the movement for the autonomous period?
+    autoChooser =
+        new LoggedDashboardChooser<>(
+            "Auto Choices",
+            AutoBuilder
+                .buildAutoChooser()); // does this determine the movement for the autonomous period?
+    // /* Yes! */
 
     // Set up SysId routines
     autoChooser.addOption( // auto options? I'm confused on what these options do.
@@ -166,9 +202,15 @@ public class RobotContainer {
                 () -> -controller.getLeftY(), // left joystick vertical
                 () -> -controller.getLeftX(), // left joystick horizontal
                 () -> new Rotation2d())); // constructor for measure of rotation?
+    /* Not Quite, when a blank Rotation2D is made, the angle is defaulted to 0* */
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(swerveSubsystem::stopWithX, swerveSubsystem)); // bind X button control to swerve, not sure what X pattern is
+    controller
+        .x()
+        .onTrue(
+            Commands.runOnce(
+                swerveSubsystem::stopWithX,
+                swerveSubsystem)); // bind X button control to swerve, not sure what X pattern is
 
     // Reset gyro to 0° when B button is pressed
     controller // bind B button control to swerve
@@ -180,7 +222,7 @@ public class RobotContainer {
                             new Pose2d(
                                 swerveSubsystem.getPose().getTranslation(), new Rotation2d())),
                     swerveSubsystem)
-                .ignoringDisable(true)); // makes it so this command runs when disabled?
+                .ignoringDisable(true)); // makes it so this command runs when disabled? /* Yes */
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
