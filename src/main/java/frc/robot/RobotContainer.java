@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
 import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -79,7 +80,9 @@ public class RobotContainer {
                 new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
 
-        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSpark(), 4);
+        endEffectorSubsystem = 
+            new EndEffectorSubsystem(
+                new EndEffectorIOSpark(), 4);
 
         break;
       case SIM:
@@ -103,6 +106,11 @@ public class RobotContainer {
                     VisionConstants.FrontRightLL,
                     VisionConstants.robotToFrontRightLL,
                     swerveSubsystem::getPose));
+
+        endEffectorSubsystem = 
+            new EndEffectorSubsystem(
+                new EndEffectorIOSim(), 4);
+        
         break;
 
       default:
