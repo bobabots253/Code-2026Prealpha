@@ -4,25 +4,22 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class EndEffectorSubsystem {
+public class EndEffectorSubsystem extends SubsystemBase {
   private final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
-  private final int index;
   private final Alert EndEffectorDisconnectedAlert;
 
-  public EndEffectorSubsystem(EndEffectorIO io, int index) {
+  public EndEffectorSubsystem(EndEffectorIO io) {
     this.io = io;
-    this.index = index;
     EndEffectorDisconnectedAlert =
-        new Alert(
-            "Disconnected End Effector motor" + Integer.toString(index) + ".", AlertType.kError);
+        new Alert("Disconnected End Effector motor" + ".", AlertType.kError);
   }
 
+  @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
     EndEffectorDisconnectedAlert.set(!inputs.EndEffectorConnected);
   }
 

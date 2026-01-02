@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
 import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.endeffector.EndEffectorSubsystem;
@@ -50,7 +51,7 @@ public class RobotContainer {
   private final SwerveSubsystem
       swerveSubsystem; // creates Vision and Swerve Subsystems in Robotcontainer.
   private final Vision vision;
-  private EndEffectorSubsystem endEffectorSubsystem;
+  private final EndEffectorSubsystem endEffectorSubsystem;
 
   // Controller
   private final CommandXboxController controller =
@@ -80,9 +81,7 @@ public class RobotContainer {
                 new VisionIOLimelight(VisionConstants.FrontLeftLL, swerveSubsystem::getRotation),
                 new VisionIOLimelight(VisionConstants.FrontRightLL, swerveSubsystem::getRotation));
 
-        endEffectorSubsystem = 
-            new EndEffectorSubsystem(
-                new EndEffectorIOSpark(), 4);
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSpark());
 
         break;
       case SIM:
@@ -107,10 +106,8 @@ public class RobotContainer {
                     VisionConstants.robotToFrontRightLL,
                     swerveSubsystem::getPose));
 
-        endEffectorSubsystem = 
-            new EndEffectorSubsystem(
-                new EndEffectorIOSim(), 4);
-        
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSim());
+
         break;
 
       default:
@@ -126,6 +123,7 @@ public class RobotContainer {
         vision =
             new Vision(swerveSubsystem::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
+        endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIO() {});
         break;
     }
 
