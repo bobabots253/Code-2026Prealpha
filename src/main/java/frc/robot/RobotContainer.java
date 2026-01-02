@@ -107,7 +107,6 @@ public class RobotContainer {
                     swerveSubsystem::getPose));
 
         endEffectorSubsystem = new EndEffectorSubsystem(new EndEffectorIOSim());
-
         break;
 
       default:
