@@ -46,11 +46,14 @@ public class RobotContainer {
   // Subsystems
   /*
    * Where is the file path for the 'swerveSubsystem'? Where is the file path for the 'vision'?
+   * 
+   * - File path for the swerve subsystem is src/main/java/frc/robot/subsystems/swerve/SwerveSubsystem.java.
+   * - File path for the vision folder is src/main/java/frc/robot/subsystems/vision.
    */
   private final SwerveSubsystem
       swerveSubsystem; // creates a new swerve subsystem variable to be initialized
   private final Vision
-      vision; // creates a new vision variable to be initialized /* What type of variable? */
+      vision; // creates a new vision variable to be initialized /* What type of variable? - An instance of the Vision Class.*/
 
   // Controller
   private final CommandXboxController controller =
@@ -63,7 +66,7 @@ public class RobotContainer {
   // I'm not sure what this chooser thing is, but I think this would be related to the smart
   // dashboard judging by its class name
   /* Nice, this LoggedDashboardChooser extends of the WPILib 'SendableChooser' class which we use to select out autos */
-  /* The only difference between this one and the default WPILib is one is that it makes it loggable */
+  /* The only difference between this one and the default WPILib is one is that it makes it loggable - got it*/
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() { // constructor
@@ -76,14 +79,14 @@ public class RobotContainer {
                 // motor objects
                 new GyroIOPigeon2(), // idk /* The GyroIO is our gyroscope we use to calculate wheel
                 // odometry, the name of the specific product is called a
-                // Pigeon 2.0 */
+                // Pigeon 2.0 - got it*/
                 new ModuleIOSpark(
-                    0), // front left motor /* Position Correct, What type of motor? */
+                    0), // front left motor /* Position Correct, What type of motor? - I think it's a combination of two motors, Spark Flex and Spark Max?*/
                 new ModuleIOSpark(
-                    1), // front right motor /* Position Correct, What type of motor? */
-                new ModuleIOSpark(2), // back left motor /* Position Correct, What type of motor? */
+                    1), // front right motor /* Position Correct, What type of motor?*/
+                new ModuleIOSpark(2), // back left motor /* Position Correct, What type of motor?*/
                 new ModuleIOSpark(
-                    3)); // back right motor /* Position Correct, What type of motor? */
+                    3)); // back right motor /* Position Correct, What type of motor?*/
 
         vision =
             new Vision( // initialize variable to a new vision object with new limelight objects
@@ -91,7 +94,7 @@ public class RobotContainer {
                     ::addVisionMeasurement, // adds a timestamped vision measurement, i'm not sure
                 // what that means
                 /* A timestamp is a digital marker that allows us to sort the collected data */
-                /* If both camera return a vision input (along with a timestamp), we know the camera frames are synced up */
+                /* If both camera return a vision input (along with a timestamp), we know the camera frames are synced up - understood*/
                 new VisionIOLimelight(
                     VisionConstants.FrontLeftLL,
                     swerveSubsystem
@@ -99,7 +102,7 @@ public class RobotContainer {
                 // and configs
                 new VisionIOLimelight(
                     VisionConstants.FrontRightLL,
-                    swerveSubsystem::getRotation)); /* What does the getRotation do? */
+                    swerveSubsystem::getRotation)); /* What does the getRotation do? - Return the odometric position and orientation of the robot*/
 
         break;
 
@@ -108,7 +111,7 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         swerveSubsystem = // initialization
             new SwerveSubsystem(
-                new GyroIO() {}, /* In simulation, no real hardware can be instantiated so we use the inbuilt WPILib Gyro class */
+                new GyroIO() {}, /* In simulation, no real hardware can be instantiated so we use the inbuilt WPILib Gyro class - got it*/
                 new ModuleIOSim(), // simulated motor modules /* Good */
                 new ModuleIOSim(),
                 new ModuleIOSim(),
@@ -129,7 +132,7 @@ public class RobotContainer {
         break;
 
       default: // if the program is running on a replay log file (not 100% sure what that means)
-        /* In replay mode, the robot uses the recorded values, there is no need to recalculate each of the value, we are just "watching" */
+        /* In replay mode, the robot uses the recorded values, there is no need to recalculate each of the value, we are just "watching" - got it*/
         // Replayed robot, disable IO implementations
         swerveSubsystem =
             new SwerveSubsystem(
@@ -202,7 +205,7 @@ public class RobotContainer {
                 () -> -controller.getLeftY(), // left joystick vertical
                 () -> -controller.getLeftX(), // left joystick horizontal
                 () -> new Rotation2d())); // constructor for measure of rotation?
-    /* Not Quite, when a blank Rotation2D is made, the angle is defaulted to 0* */
+    /* Not Quite, when a blank Rotation2D is made, the angle is defaulted to 0* - understood*/
 
     // Switch to X pattern when X button is pressed
     controller
